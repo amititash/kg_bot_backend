@@ -1,0 +1,18 @@
+{
+    "luis": {
+    "endpoint": "",
+    "appId": "",
+    "subscriptionKey": ""
+},
+    "dialogflow": {
+         "clientToken": "ed85d67061394f20bc658a879002f4dc",
+         "projectId": "neoji-1e9a4",
+         "privateKey" : "39e9e9c4285049e190ed311755860d11",
+         "clientEmail": "dialogflow-sydrub@neoji-1e9a4.iam.gserviceaccount.com"
+     },
+     "neo4j": {
+         "url": "bolt://localhost:7687",
+         "user": "neo4j",
+         "password": "l0negeek"
+     }
+ }
