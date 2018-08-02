@@ -51,7 +51,8 @@ botmaster.use({
 
     })
         .catch(() => {
-          return bot.reply(update, "sorrry try again");
+          console.log("errored");
+          return bot.reply(update, "sorry try again");
     });
 
   }

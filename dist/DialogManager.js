@@ -36,7 +36,9 @@ class DialogManager {
                 .then((intentAndEntities) => {
                 this.handleNLUIntentAndEntities(intentAndEntities)
                     .then((answer) => {
-                    console.log(answer);
+
+
+                    //console.log("promise returned ---> ",answer);
                     
                     resolve(answer);
                 })
@@ -65,7 +67,11 @@ class DialogManager {
              */
             let question = intentAndEntities.question;
             let answer;
+            console.log(">> got intents <<");
             this.debug(prettyjson.render(intentAndEntities, {}));
+            
+            //intent = 'launchUserLikes';
+
             if (intent == 'launchDoYouLike' || intent == 'Default Fallback Intent') {
 
                 /**
@@ -186,30 +192,39 @@ class DialogManager {
                  * ignore or keep or compare them. for now we will ignore and send the query to spacy 
                  */
 
-                console.log("getting entities", question);
+                //console.log("getting entities", question);
 
-                    return new Promise((resolve, reject) => {
+                   // return new Promise((resolve, reject) => {
                         this.spacyController.getEntities(question)
                             .then((entities) => {
 
-                                let answer = `OK. I understand that we need to perform an ${entities.operation} on ${entities.class} for  ${entities.timePeriod}. That's cool!`;
+                                // unpack the JS object to find the internal elements
+
+                                var result = Object.keys(entities).map(function(key) {
+                                    return key, entities[key];
+                                  });
+                                  
+                                  console.log(result[0]);
+
+                                let answer = `OK. I understand that we need to perform an ${result[0].operation[0]} on ${result[0].class[0]} for  ${result[0].timePeriod[0]}.`;
                                 let cypher = `MATCH p=()-[r:HAS_OPPORTUNITY]->() RETURN p LIMIT 25`;
                                 this.debug(answer);
                                 this.debug(`    cypher: ${cypher}`);
                                 this.neo4jController.call(cypher)
                                 .then((data) => {
-                                    // Make a LIKE relationship
-                                    //cypher = `match (like {name:'${entities.thing}'}) with like match(user:User {name:'${entities.user}'}) with like, user merge (user)-[:LIKES]->(like)`;
-                                    //this.debug(`  STEP 1a: CREATE A LIKE RELATIONSHIP...`)
-                                // this.debug(`    cypher: ${cypher}`);
-                                // this.neo4jController.call(cypher)
-                                // .then((data: any) => {
+                                     //Make a LIKE relationship
+                                //cypher = `match (like {name:'${entities.thing}'}) with like match(user:User {name:'${entities.user}'}) with like, user merge (user)-[:LIKES]->(like)`;
+                                //this.debug(`  STEP 1a: CREATE A LIKE RELATIONSHIP...`)
+                                //this.debug(`    cypher: ${cypher}`);
+                                this.neo4jController.call(cypher)
+                                .then((data) => {
                                       
-                                        resolve(data);
-                                // })
-                                // .catch(() => {
-                                    //   reject();
-                                // });
+                
+                                        resolve(answer);
+                                 })
+                                 .catch(() => {
+                                  reject();
+                                 });
                                 })
                                 .catch(() => {
                                     reject();
@@ -217,10 +232,10 @@ class DialogManager {
                             
                         })
                             .catch((err) => {
-                            console.log(err);
+                            console.log("error is ",err);
                             reject(err);
                         });
-                    });
+                    //});
 
             }
             else {

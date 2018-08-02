@@ -23,7 +23,7 @@ class SpacyEntityParserV1 extends NLUController_1.default {
                 }
                 else {
                     let body_obj = JSON.parse(body);
-                    console.log(body_obj);
+                    //console.log("returning body object");
                     resolve(body_obj);
                 }
             });
@@ -37,16 +37,16 @@ class SpacyEntityParserV1 extends NLUController_1.default {
             timePeriod: 'time',
             classLabel: 'label'
         };
-        let result = response.result;
+                
        
-       if (result) {
-            entitiesObject.class = result.class || entitiesObject.class;
-            entitiesObject.operation = result.operation || entitiesObject.operation;
-            entitiesObject.timePeriod = result.time-period || entitiesObject.time;
-            //entitiesObject.classLabel = result.parameters['class-label'] || entitiesObject.classLabel;
-            // entitiesObject.thing = result.parameters['thing'] || entitiesObject.thing;
-            // entitiesObject.thingOriginal = result.parameters['thing'] || entitiesObject.thingOriginal;
+       if (response) {
+            entitiesObject.class = response.class || entitiesObject.class;
+            entitiesObject.operation = response.operation || entitiesObject.operation;
+            entitiesObject.timePeriod = response.time_period || entitiesObject.time;
+        
         }
+
+        //console.log(entitiesObject);
         return entitiesObject;
     }
 
